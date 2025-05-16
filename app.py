@@ -2,13 +2,14 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 from models import db, User
 import os
 
+# Create Flask app with instance folder support
 app = Flask(__name__, instance_relative_config=True)
 
-# Ensure the instance folder exists
+# Ensure instance directory exists
 os.makedirs(app.instance_path, exist_ok=True)
 
-# Path to the SQLite database in the instance folder
-db_path = 'C:/Users/Lenovo/Desktop/flask_api_project/instance/mydb.sqlite3'
+# Use SQLite database in the instance folder (relative path)
+db_path = os.path.join(app.instance_path, 'mydb.sqlite3')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -19,13 +20,11 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# UI: Home page with form
 @app.route('/')
 def index():
     users = User.query.all()
     return render_template('index.html', users=users)
 
-# UI: Form submission
 @app.route('/submit', methods=['POST'])
 def submit():
     name = request.form['name']
@@ -43,7 +42,6 @@ def submit():
         db.session.rollback()
         return f"Error: {str(e)}", 500
 
-# API: Create user via JSON
 @app.route('/api/users', methods=['POST'])
 def create_user():
     data = request.json
@@ -62,7 +60,6 @@ def create_user():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# API: Get all users
 @app.route('/api/users', methods=['GET'])
 def get_users():
     users = User.query.all()
