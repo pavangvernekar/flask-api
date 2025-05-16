@@ -2,10 +2,14 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 from models import db, User
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 
-# Use SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Lenovo/Desktop/flask_api_project/instance/mydb.sqlite3'
+# Ensure the instance folder exists
+os.makedirs(app.instance_path, exist_ok=True)
+
+# Path to the SQLite database in the instance folder
+db_path = 'C:/Users/Lenovo/Desktop/flask_api_project/instance/mydb.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize DB
