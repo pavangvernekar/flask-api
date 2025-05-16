@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from models import db, User
+import os
 
 app = Flask(__name__)
 
@@ -46,4 +47,6 @@ def get_users():
     return jsonify([user.to_dict() for user in users])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Get the PORT environment variable provided by Render
+    port = int(os.environ.get("PORT", 5000))  # Default to 5000 if PORT is not set
+    app.run(host='0.0.0.0', port=port, debug=True)  # Run the app on 0.0.0.0 to be accessible externally
