@@ -5,15 +5,14 @@ import os
 app = Flask(__name__)
 
 # Ensure the database is saved in a directory that Render can access
-# For Render deployment, SQLite might not persist well, so PostgreSQL is recommended in production.
-
+# If using PostgreSQL in production, make sure to set the DATABASE_URL environment variable
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///mydb.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize DB
+# Initialize the database
 db.init_app(app)
 
-# Create DB Tables
+# Create DB Tables before the first request
 @app.before_first_request
 def create_tables():
     with app.app_context():
@@ -36,6 +35,7 @@ def submit():
     if existing_user:
         return "User already exists!", 400  # Can customize this as needed
     
+    # Create and add the new user
     user = User(name=name, email=email)
     try:
         db.session.add(user)
@@ -45,7 +45,7 @@ def submit():
         db.session.rollback()
         return f"Error: {str(e)}", 500
 
-# POST API (JSON)
+# POST API (JSON) for creating a user
 @app.route('/api/users', methods=['POST'])
 def create_user():
     data = request.json
@@ -57,6 +57,7 @@ def create_user():
     if existing_user:
         return jsonify({"error": "User already exists!"}), 400
     
+    # Create new user
     new_user = User(name=data['name'], email=data['email'])
     try:
         db.session.add(new_user)
@@ -66,7 +67,7 @@ def create_user():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# GET API
+# GET API to fetch all users
 @app.route('/api/users', methods=['GET'])
 def get_users():
     users = User.query.all()
