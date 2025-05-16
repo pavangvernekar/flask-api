@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask User Form</title>
+</head>
+<body>
+    <h1>User Registration</h1>
+    <form method="POST" action="/submit">
+        <input type="text" name="name" placeholder="Name" required><br><br>
+        <input type="email" name="email" placeholder="Email" required><br><br>
+        <button type="submit">Add User</button>
+    </form>
+
+    <h2>Existing Users</h2>
+    <ul>
+        {% for user in users %}
+        <li>{{ user.name }} ({{ user.email }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
