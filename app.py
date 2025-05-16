@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Use SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Lenovo/Desktop/flask_api_project/instance/mydb.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize DB
