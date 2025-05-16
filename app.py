@@ -5,18 +5,15 @@ import os
 app = Flask(__name__)
 
 # Ensure the database is saved in a directory that Render can access
-# If using PostgreSQL in production, make sure to set the DATABASE_URL environment variable
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///mydb.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
 db.init_app(app)
 
-# Create DB Tables before the first request
-@app.before_first_request
-def create_tables():
-    with app.app_context():
-        db.create_all()
+# Create DB Tables directly after initializing the app
+with app.app_context():
+    db.create_all()
 
 # Home with form UI
 @app.route('/')
