@@ -60,7 +60,7 @@ def create_user():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/users', methods=['GET'])
+@app.route('/api/fetch', methods=['GET'])
 def get_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users])
